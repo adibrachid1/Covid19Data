@@ -1,0 +1,126 @@
+<div class="row">
+  <div class="col-sm-6">
+    <h3>{{user.displayName}}</h3>
+  </div>
+  <div class="col-sm-6 text-right">
+    <button class="btn btn-danger" (click)="covidServiceService.signOut()">Sign out</button>
+  </div>
+</div>
+
+<div class="text-center">
+  <div class="mb-2">
+    <div>
+      <img style="width:5%" src="https://firebasestorage.googleapis.com/v0/b/covid19-c4432.appspot.com/o/covid.PNG?alt=media&token=6d4a4ae3-39e1-4971-8231-5cd45172f608" alt="Covid data">
+      <h3 style="display:inline;vertical-align: middle;">Covid-19</h3>
+    </div>
+    <p style="color: grey;font-weight: bold;margin-top: 10px;">Live Updates and Statistics</p>
+  </div>
+</div>
+
+<div class="mb-5" style="text-align: center; font-weight: bold; padding: 10px; background-color:#333a41;">
+  <span (click)="goHome()" style="color:#0073f2;cursor: pointer;" (click)="this.router.navigate(['home'])">Worldwide</span><span style="color:white"> > {{country}}</span>
+</div>
+
+<div style="font-weight: bold; padding: 10px; background-color: rgba(241, 239, 239, 0.959);">
+  Corona Virus Summary in {{country}}
+</div>
+
+<div class="mb-2">
+  <table class="table rs-table-bordered" style="border-color:white;">
+    <tbody>
+      <tr style="background-color: #fde29d;" *ngFor="let row of cases">
+        <td style="width: 60%"> {{row.name}}</td>
+        <td style="text-align: right"> {{row.value | number}}</td>
+      </tr>
+      <tr style="background-color: #87c7f3;"*ngFor="let row of recovered;let i=index">
+        <td> {{row.name}}</td>
+        <td *ngIf="i!=2" style="text-align: right"> {{row.value | number}}</td>
+        <td *ngIf="i==2" style="text-align: right"> {{row.value*100 | number:'1.2-2'}}%</td>
+      </tr>
+      <tr style="background-color: #ec96aa;"*ngFor="let row of deaths; let i=index">
+        <td> {{row.name}}</td>
+        <td *ngIf="i!=2" style="text-align: right"> {{row.value | number}}</td>
+        <td *ngIf="i==2" style="text-align: right"> {{row.value*100 | number:'1.2-2'}}%</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="mb-2" style="font-weight: bold; padding: 10px; background-color: rgba(241, 239, 239, 0.959);">
+  Corona Virus Cases Distribution in {{country}}
+</div>
+
+<div class="mb-5" style="display: block;">
+  <canvas baseChart
+    [data]="pieChartData"
+    [labels]="pieChartLabels"
+    [chartType]="pieChartType"
+    [options]="pieChartOptions"
+    [plugins]="pieChartPlugins"
+    [legend]="pieChartLegend">
+  </canvas>
+</div>
+
+<div class="mb-2" style="font-weight: bold; padding: 10px; background-color: rgba(241, 239, 239, 0.959);">
+  Daily Corona Virus Cases in {{country}}
+</div>
+
+<div class="mb-5" style="display: block;">
+  <canvas baseChart
+    [datasets]="barChartData"
+    [labels]="barChartLabels"
+    [options]="barChartOptions"
+    [plugins]="barChartPlugins"
+    [legend]="barChartLegend"
+    [chartType]="barChartType">
+  </canvas>
+</div>
+
+<div class="mb-2" style="font-weight: bold; padding: 10px; background-color: rgba(241, 239, 239, 0.959);">
+  Total Corona Virus Cases in {{country}}
+</div>
+
+<div class="mb-5" style="display: block;">
+  <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels"
+    [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"
+    [plugins]="lineChartPlugins">
+  </canvas>
+</div>
+
+<div *ngIf="superuser" id="add_news_div">
+  <h4>Add news</h4>
+
+<div class="row mb-3">
+  <div class="col-12">
+    <label for="descriptionInput"> News *</label>
+    <input type="text" id="descriptionInput" required [(ngModel)]="description" name="descriptionInput" class="form-control"
+    placeholder="What news do you want to add?">
+  </div>
+</div>
+<button [disabled]="description.length == 0" class="btn btn-primary" (click)="addNews()">Add</button>
+
+</div>
+<h4>News</h4>
+<div class="my-3" *ngIf="news.length > 0">
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let newss of news">
+        <td> {{newss.date.toDate() | date}}</td>
+        <td> {{newss.username}}</td>
+        <td> {{newss.description}}</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+
+<div class="mb-2" style="padding: 10px; background-color: rgba(241, 239, 239, 0.959);text-align: center;">
+  Data Source: <a href="https://covid19api.com">COVID-19 API / Johns Hopkins CSSE</a>
+</div>

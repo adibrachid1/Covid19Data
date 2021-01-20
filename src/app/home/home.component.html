@@ -1,0 +1,162 @@
+<div class="row">
+  <div class="col-sm-6">
+    <h3>{{user.displayName}}</h3>
+  </div>
+  <div class="col-sm-6 text-right">
+    <button class="btn btn-danger" (click)="covidServiceService.signOut()">Sign out</button>
+  </div>
+</div>
+
+<div class="text-center">
+  <div class="mb-2">
+    <div>
+      <img style="width:5%" src="https://firebasestorage.googleapis.com/v0/b/covid19-c4432.appspot.com/o/covid.PNG?alt=media&token=6d4a4ae3-39e1-4971-8231-5cd45172f608" alt="Covid data">
+      <h3 style="display:inline;vertical-align: middle;">Covid-19</h3>
+    </div>
+    <p style="color: grey;font-weight: bold;margin-top: 10px;">Live Updates and Statistics</p>
+  </div>
+</div>
+
+<div style="font-weight: bold; padding: 10px; background-color: rgba(241, 239, 239, 0.959);">
+  Corona Virus Summary Worldwide
+</div>
+
+<div class="mb-2">
+  <table class="table rs-table-bordered" style="border-color:white;">
+    <tbody>
+      <tr style="background-color: #fde29d;" *ngFor="let row of cases">
+        <td style="width: 60%"> {{row.name}}</td>
+        <td style="text-align: right"> {{row.value | number}}</td>
+      </tr>
+      <tr style="background-color: #87c7f3;"*ngFor="let row of recovered;let i=index">
+        <td> {{row.name}}</td>
+        <td *ngIf="i!=2" style="text-align: right"> {{row.value | number}}</td>
+        <td *ngIf="i==2" style="text-align: right"> {{row.value*100 | number:'1.2-2'}}%</td>
+      </tr>
+      <tr style="background-color: #ec96aa;"*ngFor="let row of deaths; let i=index">
+        <td> {{row.name}}</td>
+        <td *ngIf="i!=2" style="text-align: right"> {{row.value | number}}</td>
+        <td *ngIf="i==2" style="text-align: right"> {{row.value*100 | number:'1.2-2'}}%</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="mb-2" style="font-weight: bold; padding: 10px; background-color: rgba(241, 239, 239, 0.959);">
+  Corona Virus Cases Distribution Worldwide
+</div>
+
+<div class="mb-5" style="display: block;">
+  <canvas baseChart
+    [data]="pieChartData"
+    [labels]="pieChartLabels"
+    [chartType]="pieChartType"
+    [options]="pieChartOptions"
+    [plugins]="pieChartPlugins"
+    [legend]="pieChartLegend">
+  </canvas>
+</div>
+
+<div class="mb-2" style="font-weight: bold; padding: 10px; background-color: rgba(241, 239, 239, 0.959);">
+  Daily Corona Virus Cases Worldwide
+</div>
+
+<div class="mb-5" style="display: block;">
+  <canvas baseChart
+    [datasets]="barChartData"
+    [labels]="barChartLabels"
+    [options]="barChartOptions"
+    [plugins]="barChartPlugins"
+    [legend]="barChartLegend"
+    [chartType]="barChartType">
+  </canvas>
+</div>
+
+<div class="mb-2" style="font-weight: bold; padding: 10px; background-color: rgba(241, 239, 239, 0.959);">
+  Total Corona Virus Cases Worldwide
+</div>
+
+<div class="mb-5" style="display: block;">
+  <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels"
+    [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"
+    [plugins]="lineChartPlugins">
+  </canvas>
+</div>
+
+<div class="mb-2" style="font-weight: bold; padding: 10px; background-color: rgba(241, 239, 239, 0.959);">
+  Corona Virus Cases by Country
+</div>
+
+<div class="mb-2">
+  <table class="mdbTable table rs-table-bordered" style="border-color:white;">
+    <thead style="border-bottom: 5px solid white;">
+      <tr style="text-align: center;">
+        <th style="background-color: #6c767d;color: white">Country <br><span style="cursor: pointer" (click)="sort('up','C')">&#x25B2;</span>           <span style="cursor: pointer" (click)="sort('down','C')">     &#x25BC;</span></th>
+        <th style="background-color: #fde29d">New Cases<br><span style="cursor: pointer" (click)="sort('up','NC')">&#x25B2;</span>           <span style="cursor: pointer" (click)="sort('down','NC')">     &#x25BC;</span></th>
+        <th style="background-color: #fde29d">Total Cases<br><span style="cursor: pointer" (click)="sort('up','TC')">&#x25B2;</span>           <span style="cursor: pointer" (click)="sort('down','TC')">     &#x25BC;</span></th>
+        <th style="background-color: #87c7f3">New Recoveries<br><span style="cursor: pointer" (click)="sort('up','NR')">&#x25B2;</span>           <span style="cursor: pointer" (click)="sort('down','NR')">     &#x25BC;</span></th>
+        <th style="background-color: #87c7f3">Total Recoveries<br><span style="cursor: pointer" (click)="sort('up','TR')">&#x25B2;</span>           <span style="cursor: pointer" (click)="sort('down','TR')">     &#x25BC;</span></th>
+        <th style="background-color: #ed97ab">New Deaths<br><span style="cursor: pointer" (click)="sort('up','ND')">&#x25B2;</span>           <span style="cursor: pointer" (click)="sort('down','ND')">     &#x25BC;</span></th>
+        <th style="background-color: #ed97ab">Total Deaths<br><span style="cursor: pointer" (click)="sort('up','TD')">&#x25B2;</span>           <span style="cursor: pointer" (click)="sort('down','TD')">     &#x25BC;</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr  *ngFor="let country of countries">
+        <td style="background-color: #6c767d;color: white; cursor: pointer;" (click)="go_to_country(country.values[6])"> {{country.name}}</td>
+        <td style="text-align: right;background-color: #fde29d"> {{country.values[0] | number}}</td>
+        <td style="text-align: right;background-color: #fde29d"> {{country.values[1] | number}}</td>
+        <td style="text-align: right;background-color: #87c7f3"> {{country.values[2] | number}}</td>
+        <td style="text-align: right;background-color: #87c7f3"> {{country.values[3] | number}}</td>
+        <td style="text-align: right;background-color: #ed97ab"> {{country.values[4] | number}}</td>
+        <td style="text-align: right;background-color: #ed97ab"> {{country.values[5] | number}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="superuser" id="add_news_div">
+  <h4>Add news</h4>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Country</mat-label>
+    <mat-select name="world" (selectionChange)="changeNewsCountry($event.value)">
+      <mat-option value="world">
+        World
+      </mat-option>
+      <mat-option *ngFor="let country of countries" [value]="country.values[6]">
+        {{country.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field> (World by default)
+<div class="row mb-3">
+  <div class="col-12">
+    <label for="descriptionInput"> News *</label>
+    <input type="text" id="descriptionInput" required [(ngModel)]="description" name="descriptionInput" class="form-control"
+    placeholder="What news do you want to add?">
+  </div>
+</div>
+<button [disabled]="description.length == 0" class="btn btn-primary" (click)="addNews()">Add</button>
+
+</div>
+<h4>News</h4>
+<div class="my-3" *ngIf="news.length > 0">
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let newss of news">
+        <td> {{newss.date.toDate() | date}}</td>
+        <td> {{newss.username}}</td>
+        <td> {{newss.description}}</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+<div class="mb-2" style="padding: 10px; background-color: rgba(241, 239, 239, 0.959);text-align: center;">
+  Data Source: <a href="https://covid19api.com">COVID-19 API / Johns Hopkins CSSE</a>
+</div>

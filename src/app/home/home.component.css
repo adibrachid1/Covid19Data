@@ -1,0 +1,10 @@
+table.rs-table-bordered{
+  border:2px solid #ffffff;
+  margin-top:10px;
+}
+table.rs-table-bordered > thead > tr > th{
+  border:2px solid #ffffff;
+}
+table.rs-table-bordered > tbody > tr > td{
+  border:2px solid #ffffff;
+}
