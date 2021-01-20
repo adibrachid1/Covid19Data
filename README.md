@@ -2,6 +2,15 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.2.0.
 
+# Features
+
+Live Data
+Save and load data from Google Cloud Firestore rather than API unless it was not updated same day in Firestore
+Google Sign in
+Super users can post news worldwide or for every country
+Cool NG Charts showing useful data
+Easy navigation
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
