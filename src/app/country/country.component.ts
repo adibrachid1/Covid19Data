@@ -97,12 +97,13 @@ goHome(){
    this.summarySubscription = this.covidServiceService.summaryCountrySubject.subscribe(
     (data: {name: string, values:number[]}) => {
         if(data.values.length > 0){
+          if(this.nbr_of_times3==0 && this.countrySlug==data.name){
           this.cases = []; this.recovered = []; this.deaths = []
           this.cases = [{name:"Total Cases",value:data.values[0]}, {name: "New Cases", value: data.values[1]}, {name: "Active Cases", value: data.values[2]}];
           this.recovered = [{name: "Total Recovered", value: data.values[3]}, {name: "New Recovered", value: data.values[4]}, {name: "Recovery Rate", value: data.values[5]}];
           this.deaths = [{name: "Total Deaths", value: data.values[6]}, {name: "New Deaths", value: data.values[7]}, {name: "Mortality Rate", value: data.values[8]}];
           //Prepare Pie
-          this.resetPieChart([data[6], data[3], data[2]])
+
           //update DATABASE
           let new_summary : Summary = {
             date:new Date().toString(),
@@ -117,8 +118,10 @@ goHome(){
             //mortality_rate: data[8].toString()
           }
           console.log("uploading to firestore")
-          if(this.nbr_of_times3==0 && this.countrySlug==data.name){
+
             console.log("update "+this.countrySlug)
+            this.resetPieChart([data.values[6], data.values[3], data.values[2]])
+            console.log([data.values[6], data.values[3], data.values[2]])
             this.firestore.collection("summary").doc(this.countrySlug).set(new_summary);
             this.nbr_of_times3++;
           }
@@ -242,6 +245,7 @@ checkFireStore(){
           this.recovered = [{name: "Total Recovered", value: +summary["TotalRecovered"]}, {name: "New Recovered", value: +summary["NewRecovered"]}, {name: "Recovery Rate", value: (+summary["TotalRecovered"])/(+summary["TotalConfirmed"])}];
           this.deaths = [{name: "Total Deaths", value: +summary["TotalDeaths"]}, {name: "New Deaths", value: +summary["NewDeaths"]}, {name: "Mortality Rate", value: (+summary["TotalDeaths"])/(+summary["TotalConfirmed"])}];
           this.resetPieChart([this.deaths[0].value,this.recovered[0].value,this.cases[0].value])
+          console.log([this.deaths[0].value,this.recovered[0].value,this.cases[0].value])
           console.log("Summary from google firestore")
       }
       else{
