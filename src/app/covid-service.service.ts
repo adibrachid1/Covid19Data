@@ -279,11 +279,13 @@ export class CovidServiceService {
         .subscribe(
           (response) => {
             this.sort_by_key_name(response,"TotalConfirmed");
+            console.log((this.backendURL + '/world?from=' + day1 + '&to=' + today));
             for (const d of response){
               //console.log(d)
               this.summaryFrom[0].push(d["TotalDeaths"]);
               this.summaryFrom[1].push(d["TotalRecovered"]);
               this.summaryFrom[2].push(d["TotalConfirmed"]);
+              this.summaryFrom[3].push(d["Date"]);
             }
             this.summaryFromSubject.next(this.summaryFrom);
             return;

@@ -136,7 +136,8 @@ export class HomeComponent implements OnInit {
         this.lineChartData = [];
           var today = (new Date()).toISOString().slice(0,10)
         for (var i=0;i<dataFrom[0].length;i++){
-          this.lineChartLabels.push(i.toString());
+          //this.lineChartLabels.push(i.toString());
+          this.lineChartLabels.push(("0"+new Date(dataFrom[3][i]).getDate()).slice(-2)+ " "+ this.getmonth(new Date(dataFrom[3][i]).getMonth()));
           //console.log(i.toString())
         }
         this.lineChartData = [
@@ -210,7 +211,10 @@ export class HomeComponent implements OnInit {
       console.log(this.superuser)
     });
   }
-
+  getmonth(m){
+    var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+    return months[m];
+  }
 getSummaryData(country){
   return this.firestore.collection("summary").doc(country).valueChanges();
 }
